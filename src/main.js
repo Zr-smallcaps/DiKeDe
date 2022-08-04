@@ -32,10 +32,27 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+// 自定义指令
+import * as directives from '@/directive/index.js'
+// 遍历所有的导出的指令对象 完成自定义全局注册
+Object.keys(directives).forEach(key => {
+  // 注册自定义指令
+  Vue.directive(key, directives[key])
+})
+
+
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+
+// 注册全局组件
+//引入
+import Component from '@/components'
+//注册
+Vue.use(Component) 
+
 
 Vue.config.productionTip = false
 

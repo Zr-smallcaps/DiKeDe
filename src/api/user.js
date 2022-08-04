@@ -15,10 +15,17 @@ export function getVerificationCode(code) {
     responseType: 'arraybuffer'
   })
 }
-
-export function logout() {
+// 获取用户信息
+export function getUserDetailInfo(id) {
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url: `/user-service/user/${id}`,
+    method: 'get'
   })
 }
+
+// export function logout() {
+//   return request({
+//     url: '/vue-admin-template/user/logout',
+//     method: 'post'
+//   })
+// }

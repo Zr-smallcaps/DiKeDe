@@ -45,7 +45,6 @@
 
 <script>
 import { debounce } from "lodash"
-import { login } from '@/api/user'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions: mapLoginActions, mapState: mapLoginState } =
   createNamespacedHelpers('user')
@@ -62,10 +61,16 @@ export default {
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', message: '请输入正确的用户名' }
+          { required: true, trigger: 'blur', message: '请输入正确的用户名' },
+          { pattern:/^[A-Za-z0-9]+$/, trigger:true , message:'只能是数字和字母'}
         ],
         password: [
-          { required: true, trigger: 'blur', message: '请输入正确的密码'  }
+          { required: true, trigger: 'blur', message: '请输入正确的密码'  },
+          { pattern:/^[A-Za-z0-9]+$/, trigger:true , message:'只能是数字和字母'}
+        ],
+        code:[
+          {required: true, trigger: 'blur', message: '请输入正确的密码'   },
+          {message:"请输入数字和字母", trigger:'blur', pattern:/^[A-Za-z0-9]+$/ }
         ]
       },
       loading: false,
@@ -99,24 +104,19 @@ export default {
         this.$refs.password.focus()
       })
     },
-   async handleLogin() {
-    await this.$refs.loginForm.validate((valid) => {
+    handleLogin() {
+     this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           this.loading = true
-        try{
-          const res = login({
+      await this.setUserInfo({
             loginName:this.loginForm.username,
             password:this.loginForm.password,
             code:this.loginForm.code,
             clientToken:this.randomCode,
             loginType:0
           })
-          this.setUserInfo(res)
           this.loading = false
-          this.$router.push('/dashboard')
-          }catch(error){
-            console.log('登录失败')
-          }
+          this.$router.push('/')
         } else {
           console.log('error submit!!')
           return false
